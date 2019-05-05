@@ -23,7 +23,7 @@
 
 void print_usage_and_exit(void)
 {
-     char *help = "\nusage: ge_k8s_start <GE_K8S_CONFIG_FILE> <GE_K8S_KUBEADM_CONFIG_TEMPLATE>\n\n"
+     const char *help = "\nusage: ge_k8s_start <GE_K8S_CONFIG_FILE> <GE_K8S_KUBEADM_CONFIG_TEMPLATE>\n\n"
                   "The following variables must be defined in your environment:\n"
                   "\n- GE_K8S_NODE_START_SCRIPT:         path to the script to bootstrap a k8s node"
                   "\n- GE_K8S_CONFIG_FILE:               defines environment variables to configure the join of a node"
@@ -51,6 +51,7 @@ int main(int argc, char *argv[])
      fprintf(stderr, "%s", "\n\nChanging UID... ");
      if (setuid(0))
      {
+          fprintf(stderr, "%s", " ERROR\n");
           perror("Unable to set UID to 0\n");
           return -1;
      }

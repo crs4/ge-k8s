@@ -13,17 +13,32 @@
 # License for the specific language governing permissions and limitations
 # under the License.
 
+# current path
+current_path="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
+
 # set Docker version
-DOCKER_VERSION="18.06.1"
+docker_version="18.06.1"
 
 # set Kubernetes version
-K8S_VERSION="v1.12.7"
+k8s_version="v1.12.7"
+
+# default machine files path
+ge_k8s_machine_file="${TMPDIR}/machines)"
+
+# set default ge_k8s_node_start_launcher
+ge_k8s_node_start_launcher="${current_path}/ge_k8s_node_start_launcher"
+
+# set default ge_k8s_node_start
+ge_k8s_node_start_script="${current_path}/ge_k8s_node_start.sh"
+
+# set default gs_k8s_kubeadm_config
+kubeadm_config_template="${current_path}/gs_k8s_kubeadm_config.template"
 
 # set k8s API server endpoint (e.g., 172.30.64.1:6443)
-K8S_API_ENDPOINT=
+k8s_api_endpoint="172.30.10.101:6443"
 
 # set k8s token
-K8S_KUBEADM_TOKEN=
+k8s_kubeadm_token="zv18vk.q30uidedqilsdklj"
 
 # set labels of joining nodes (e.g., l1,l2,l3, etc.)
-K8S_NODE_LABELS=
+k8s_node_labels="transient-node"
