@@ -16,20 +16,17 @@
 # current path
 current_path="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 
-# set Docker version
-docker_version="18.06.1"
+# default machine files path
+gek8s_machine_file="${TMPDIR}machines"
 
-# set Kubernetes version
-k8s_version="v1.12.7"
+# set default gek8s_node_start_launcher
+gek8s_node_start_launcher="${current_path}/gek8s-node-start-launcher"
 
-# set default gs_k8s_kubeadm_config
-kubeadm_config_template="${current_path}/gs-k8s-kubeadm-config.template"
+# set default gek8s_node_start
+gek8s_node_start_script="${current_path}/gek8s-node-start.sh"
 
-# set k8s API server endpoint (e.g., 172.30.64.1:6443)
-k8s_api_endpoint="172.30.10.101:6443"
+# supported configuration properties
+gek8s_allowed_config_properties="docker_version k8s_version kubeadm_config_template k8s_api_endpoint k8s_kubeadm_token k8s_node_labels"
 
-# set k8s token
-k8s_kubeadm_token="zv18vk.q30uidedqilsdklj"
-
-# set labels of joining nodes (e.g., l1,l2,l3, etc.)
-k8s_node_labels="transient-node"
+# set default gek8s_config_file
+gek8s_config_file="${current_path}/config.sh"
