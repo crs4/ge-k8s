@@ -23,7 +23,7 @@
 #include <limits.h>
 
 // node boostrap script
-# define START_SCRIPT "/gek8s-node-start.sh"
+# define START_SCRIPT "/gek8s-node-stop.sh"
 
 /** Print usage and exist reporting an error code */
 void print_usage_and_exit(void)
