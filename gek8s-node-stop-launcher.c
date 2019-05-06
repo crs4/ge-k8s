@@ -23,7 +23,7 @@
 #include <limits.h>
 
 // node boostrap script
-# define START_SCRIPT "/gek8s-node-stop.sh"
+# define BASH_SCRIPT "/gek8s-node-stop.sh"
 
 /** Print usage and exist reporting an error code */
 void print_usage_and_exit(void)
@@ -49,26 +49,26 @@ int main(int argc, char *argv[])
      fprintf(stderr, "%s", "OK");
 
      // build boostrap command
-     char cmd[PATH_MAX*2]; //TODO: fix the size of cmd
-     if (getcwd(cmd, sizeof(cmd)) != NULL)
+     char cmd[PATH_MAX];
+     char *cmd_arguments[(argc-1)*2];     
+     if (getcwd(cmd, sizeof(cmd)) != NULL)     
      {
-          strcat(cmd, START_SCRIPT);
-          strcat(cmd, " ");
-          for (int i = 1; i < argc; i++)
+          strcat(cmd, BASH_SCRIPT);          
+          for (int i = 1; i < sizeof(cmd_arguments)/sizeof(char*); i++)
           {
-               strcat(cmd, "-v ");
-               strcat(cmd, argv[i]);
+               cmd_arguments[i]="-v";
+               cmd_arguments[i+1]=argv[i];
           }
      }
      else
      {
-          perror("Error getting the CWD");
+          perror("Error getting the current working directory");
           print_usage_and_exit();
      }
 
-     // run node boostrap command as root
-     fprintf(stderr, "%s", "\nStarting node... ");
-     fprintf(stderr, "Printinf cmd: %s", cmd);
-     system(cmd);
-     fprintf(stderr, "%s", "DONE\n");
+     // Execute the bash script with root privileges
+     if(execvp(cmd, cmd_arguments)==-1){
+          perror("\nError during node boostrap");
+          exit(EXIT_FAILURE);
+     }
 }
