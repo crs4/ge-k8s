@@ -1,15 +1,15 @@
 apiVersion: kubeadm.k8s.io/v1alpha3
 kind: JoinConfiguration
-token: ${K8S_KUBEADM_TOKEN}
-tlsBootstrapToken: ${K8S_KUBEADM_TOKEN}
+token: ${k8s_kubeadm_token}
+tlsBootstrapToken: ${k8s_kubeadm_token}
 discoveryFile: ""
-discoveryToken: ${K8S_KUBEADM_TOKEN}
+discoveryToken: ${k8s_kubeadm_token}
 discoveryTimeout: 5m0s
 discoveryTokenAPIServers:
-- ${K8S_API_ENDPOINT}
+- ${k8s_api_endpoint}
 discoveryTokenUnsafeSkipCAVerification: true
 nodeRegistration:
   name: ${HOSTNAME}
   criSocket: /var/run/dockershim.sock
   kubeletExtraArgs:
-    node-labels: ${K8S_NODE_LABELS}
+    node-labels: ${k8s_node_labels}
