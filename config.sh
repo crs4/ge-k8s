@@ -23,7 +23,7 @@ docker_version="18.06.1"
 k8s_version="v1.12.7"
 
 # set default gs_k8s_kubeadm_config
-kubeadm_config_template="${current_path}/gs-k8s-kubeadm-config.template"
+kubeadm_config_template="${current_path}/gs-k8s-kubeadm-config.template.yml"
 
 # set k8s API server endpoint (e.g., 172.30.64.1:6443)
 k8s_api_endpoint="172.30.10.101:6443"

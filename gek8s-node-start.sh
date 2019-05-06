@@ -62,7 +62,7 @@ systemctl restart docker
 
 # generate 
 kubeadm_config_file="$(mktemp)"
-envsubst < ${GE_K8S_KUBEADM_CONFIG_TEMPLATE} > "${kubeadm_config_file}"
+envsubst < ${kubeadm_config_template} > "${kubeadm_config_file}"
 
 # config and launch kubelet via kubeadm
 kubeadm join --config "${kubeadm_config_file}" --ignore-preflight-errors=all
