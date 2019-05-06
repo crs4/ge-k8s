@@ -141,13 +141,6 @@ done
 # Only for debugging
 log_config_properities
 
-# check whether there exists at least one argument
-if [[ ${#positional_parameters[@]} -lt 1  ]]; then
-    error_log "Invalid number of arguments"
-    help
-    exit 1
-fi
-
 # check whether the config-file exists
 if [[ ! -f "${gek8s_config_file}" ]]; then
     error_log "Config file ${gek8s_config_file} doen't exist!"

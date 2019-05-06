@@ -35,6 +35,13 @@ function help() {
     ">&2
 }
 
+# check whether there exists at least one argument
+if [[ ${#positional_parameters[@]} -lt 1  ]]; then
+    error_log "Invalid number of arguments"
+    help
+    exit 1
+fi
+
 # prepare pdsh cmd
 cmd="${gek8s_node_stop_launcher} kubeadm_config_template=${kubeadm_config_template} ${parameters}"
 debug_log "COMMAND: ${cmd}"

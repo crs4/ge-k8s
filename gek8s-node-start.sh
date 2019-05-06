@@ -13,7 +13,7 @@
  # License for the specific language governing permissions and limitations
  # under the License.
 
-set -o nounset
+#set -o nounset
 set -o errexit
 set -o pipefail
 set -o errtrace
@@ -67,5 +67,5 @@ envsubst < ${GE_K8S_KUBEADM_CONFIG_TEMPLATE} > "${kubeadm_config_file}"
 # config and launch kubelet via kubeadm
 kubeadm join --config "${kubeadm_config_file}" --ignore-preflight-errors=all
 
-# Lancia lo script che fa vari sleep e start stop di kubelet
+# wait until kubelet is up and running
 "${current_path}/wait_for_kubelet.sh"

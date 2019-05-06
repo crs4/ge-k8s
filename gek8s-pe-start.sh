@@ -35,6 +35,13 @@ function help() {
     ">&2
 }
 
+# check whether there exists at least one argument
+if [[ ${#positional_parameters[@]} -lt 1  ]]; then
+    error_log "Invalid number of arguments"
+    help
+    exit 1
+fi
+
 # prepare pdsh cmd
 cmd="${gek8s_node_start_launcher} kubeadm_config_template=${kubeadm_config_template} ${parameters}"
 debug_log "COMMAND: ${cmd}"
@@ -44,7 +51,7 @@ debug_log "COMMAND: ${cmd}"
 
 # load environment module for running the pdsh parallel shell tool
 if ! type pdsh >/dev/null 2>&1 ; then
-#module load pdsh
+    module load pdsh
 fi
 
 # prepare the host list as needed by pdsh, i.e., host1,host2,hostn
@@ -54,4 +61,4 @@ for host in $(cat ${gek8s_machine_file} | awk '{print $1}'); do
 done
 
 # launch the k8s join on each SGE allocated node
-#pdsh -w ${hostlist} "${cmd}"
+pdsh -w ${hostlist} "${cmd}"
