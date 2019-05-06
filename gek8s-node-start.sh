@@ -68,4 +68,4 @@ envsubst < ${kubeadm_config_template} > "${kubeadm_config_file}"
 kubeadm join --config "${kubeadm_config_file}" --ignore-preflight-errors=all
 
 # wait until kubelet is up and running
-"${current_path}/wait_for_kubelet.sh"
+"${current_path}/wait-for-kubelet.sh"
