@@ -46,8 +46,8 @@ fi
 kubeadm reset -f
 
 # (re)start Docker service
-systemctl stop docker-${DOCKER_VERSION}
-systemctl stop kubelet-${K8S_VERSION}
+systemctl stop docker-${docker_version}
+systemctl stop kubelet-${k8s_version}
 
 # teardown network interfaces
 ifconfig flannel.1 down

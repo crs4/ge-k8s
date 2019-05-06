@@ -58,7 +58,7 @@ done
 kubeadm reset -f
 
 # (re)start Docker service
-systemctl restart docker-${docker_version}
+systemctl restart docker
 
 # generate 
 kubeadm_config_file="$(mktemp)"
