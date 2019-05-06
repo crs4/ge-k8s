@@ -56,8 +56,8 @@ int main(int argc, char *argv[])
           strcat(cmd, BASH_SCRIPT);          
           for (int i = 1; i < sizeof(cmd_arguments)/sizeof(char*); i++)
           {
-               cmd_arguments[i]="-v";
-               cmd_arguments[i+1]=argv[i];
+               cmd_arguments[(i-1)*2]="-v";
+               cmd_arguments[(i-1)*2+1]=argv[i];
           }
      }
      else

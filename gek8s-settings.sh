@@ -17,7 +17,7 @@
 current_path="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 
 # default machine files path
-gek8s_machine_file="${TMPDIR}machines"
+gek8s_machine_file="${TMPDIR:-'/tmp/'}machines"
 
 # set default gek8s_node_start_launcher
 gek8s_node_start_launcher="${current_path}/gek8s-node-start-launcher"
