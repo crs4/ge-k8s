@@ -65,4 +65,4 @@ for host in $(cat ${gek8s_machine_file} | awk '{print $1}'); do
 done
 
 # launch the k8s join on each SGE allocated node
-pdsh -w ${hostlist} "${cmd}"
+pdsh -w ${hostlist} ${cmd}
