@@ -28,7 +28,7 @@
 /** Print usage and exist reporting an error code */
 void print_usage_and_exit(void)
 {
-     const char *help = "\nusage: gek8s-node-start-launcher [p1=v1] [p2=v2] ... [pn=vn]\n\n"
+     const char *help = "\nusage: gek8s-node-stop-launcher [p1=v1] [p2=v2] ... [pn=vn]\n\n"
                         "pi=vi are pair of property values\n\n";
      fprintf(stderr, "%s", help);
      exit(EXIT_FAILURE);

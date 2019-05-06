@@ -18,90 +18,13 @@ set -o errexit
 set -o pipefail
 set -o errtrace
 
-# set the current version number
-VERSION="0.1"
+# current path
+current_path="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 
-# initialize the bash environment if needed
-# . /Archive/Software/Modules/3.2.10/init/bash
+# load commons
+source "${current_path}/gek8s-common.sh"
 
-# portable version of abspath
-function abspath() {
-    local path="${*}"
-    
-    if [[ -d "${path}" ]]; then
-        echo "$( cd "${path}" >/dev/null && pwd )"
-    else
-        echo "$( cd "$( dirname "${path}" )" >/dev/null && pwd )/$(basename "${path}")"
-    fi
-}
-
-function script_dir() {
-  echo "$(dirname $(abspath ${BASH_SOURCE[0]}))"
-}
-
-function print_version() {
-  echo "${VERSION}"
-}
-
-function log() {
-    echo -e "${@}" >&2
-}
-
-function debug_log() {
-    if [[ -n "${DEBUG:-}" ]]; then
-        echo -e "DEBUG: ${@}" >&2
-    fi
-}
-
-function log_allowed_environment_config_properties() {
-    if [[ -n ${DEBUG:-} ]]; then
-        debug_log "\nAllowed config properties..."
-        for param in ${gek8s_allowed_config_properties}; do    
-            debug_log "${param} => ${!param}"
-        done
-        debug_log "DONE"
-    fi
-}
-
-function log_config_properities(){
-    if [[ -n  ${DEBUG:-} ]]; then
-        debug_log "Config properties..."
-        for v in "${config_properties[@]}"; do  
-            debug_log "${v}"
-        done
-        debug_log "DONE"
-    fi
-}
-
-function error_log() {
-    echo -e "ERROR: ${@}" >&2
-}
-
-function error_trap() {
-    error_log "Error at line ${BASH_LINENO[1]} running the following command:\n\n\t${BASH_COMMAND}\n\n"
-    error_log "Stack trace:"
-    for (( i=1; i < ${#BASH_SOURCE[@]}; ++i)); do
-        error_log "$(printf "%$((4*$i))s %s:%s\n" " " "${BASH_SOURCE[$i]}" "${BASH_LINENO[$i]}")"
-    done
-    exit 2
-}
-
-trap error_trap ERR
-
-function usage_error() {
-    if [[ $# > 0 ]]; then
-        echo -e "ERROR: ${@}" >&2
-    fi
-    help
-    exit 2
-}
-
-
-# load global settings
-set -o allexport
-source "$(script_dir)/gek8s-settings.sh"
-set +o allexport
-
+# show help
 function help() {
     local script_name=$(basename "$0")
     echo -e "\nUsage: ${script_name} [-f gek8s_config_file] [-v p1=v1] ... [-v pn=vn] <gek8s_machine_file>
@@ -112,126 +35,6 @@ function help() {
     ">&2
 }
 
-# Collect arguments to be passed on to the next program in an array, rather than
-# a simple string. This choice lets us deal with arguments that contain spaces.
-positional_parameters=()
-
-config_properties=()
-
-# parse arguments
-while [ -n "${1-}" ]; do
-    # Copy so we can modify it (can't modify $1)
-    OPT="$1"
-    # Detect argument termination
-    if [ x"$OPT" = x"--" ]; then
-        shift
-        for OPT ; do
-            # append to array
-            positional_parameters+=("$OPT")
-        done
-        break
-    fi
-    # Parse current opt
-    while [ x"$OPT" != x"-" ] ; do
-        case "$OPT" in
-            -h )
-                help
-                exit 0
-                ;;
-            -f )
-                gek8s_config_file="${OPT#*=}"
-                shift
-                ;;
-            -v )
-                config_properties+=("${2}")
-                shift
-                ;;                  
-            * )
-                # append to array
-                positional_parameters+=("$OPT")
-                break
-                ;;
-        esac
-        # Check for multiple short options
-        # NOTICE: be sure to update this pattern to match valid options
-        NEXTOPT="${OPT#-[cfr]}" # try removing single short opt
-        if [ x"$OPT" != x"$NEXTOPT" ] ; then
-            OPT="-$NEXTOPT"  # multiple short opts, keep going
-        else
-            break  # long form, exit inner loop
-        fi
-    done
-    # move to the next param
-    shift
-done
-
-# Only for debugging
-log_config_properities
-
-# check whether there exists at least one argument
-if [[ ${#positional_parameters[@]} -lt 1  ]]; then
-    error_log "Invalid number of arguments"
-    help
-    exit 1
-fi
-
-# check whether the config-file exists
-if [[ ! -f "${gek8s_config_file}" ]]; then
-    error_log "Config file ${gek8s_config_file} doen't exist!"
-    exit 1
-fi
-
-# Save current environment variables
-debug_log "Saving environment config properties..."
-environment_config_properties=""
-for v in ${gek8s_allowed_config_properties}; do
-    if [[ -n "${!v}" ]]; then
-        cp="${v}"="${!v}"
-        environment_config_properties="${environment_config_properties} ${cp}"
-        debug_log "${cp}"
-    fi
-done
-debug_log "DONE"
-
-# load configuration from file
-set -o allexport
-source "${gek8s_config_file}"
-set +o allexport
-
-# override properties on configuration file with the existing environment
-debug_log "Restore existing environment variables..."
-for v in ${environment_config_properties}; do    
-    debug_log "${v%=*}"="${v#*=}"
-    export "${v%=*}"="${v#*=}"    
-done
-debug_log "DONE"
-
-# check whether the machine file generated by SGE exists
-if [[ ! -f "${gek8s_machine_file}" ]]; then
-    error_log "Machine file '${gek8s_machine_file}' doen't exist!"
-    exit 1
-fi
-
-# Only for debugging
-log_allowed_environment_config_properties
-
-# override default configuration by setting environment parameters
-for v in "${config_properties[@]}"; do    
-    export "${v%=*}"="${v#*=}"
-done
-
-# Only for debugging
-log_allowed_environment_config_properties
-
-# write node config file
-debug_log "Writing node configuration parameters..."
-parameters=""
-for param in ${gek8s_allowed_config_properties}; do
-    debug_log "Adding ${param}=${!param}"
-    parameters="${parameters} ${param}=${!param}"
-done
-debug_log "DONE"
-
 # prepare pdsh cmd
 cmd="${gek8s_node_start_launcher} kubeadm_config_template=${kubeadm_config_template} ${parameters}"
 debug_log "COMMAND: ${cmd}"
@@ -240,7 +43,9 @@ debug_log "COMMAND: ${cmd}"
 /bin/bash -c "${cmd}"
 
 # load environment module for running the pdsh parallel shell tool
-module load pdsh
+if ! type pdsh >/dev/null 2>&1 ; then
+#module load pdsh
+fi
 
 # prepare the host list as needed by pdsh, i.e., host1,host2,hostn
 # it might be useless, depending on the format of the machine file directly generated by SGE
@@ -249,4 +54,4 @@ for host in $(cat ${gek8s_machine_file} | awk '{print $1}'); do
 done
 
 # launch the k8s join on each SGE allocated node
-pdsh -w ${hostlist} "${cmd}"
+#pdsh -w ${hostlist} "${cmd}"

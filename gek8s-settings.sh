@@ -22,8 +22,14 @@ gek8s_machine_file="${TMPDIR}machines"
 # set default gek8s_node_start_launcher
 gek8s_node_start_launcher="${current_path}/gek8s-node-start-launcher"
 
+# set default gek8s_node_start_launcher
+gek8s_node_stop_launcher="${current_path}/gek8s-node-stop-launcher"
+
 # set default gek8s_node_start
 gek8s_node_start_script="${current_path}/gek8s-node-start.sh"
+
+# set default gek8s_node_stop
+gek8s_node_stop_script="${current_path}/gek8s-node-stop.sh"
 
 # supported configuration properties
 gek8s_allowed_config_properties="docker_version k8s_version kubeadm_config_template k8s_api_endpoint k8s_kubeadm_token k8s_node_labels"
