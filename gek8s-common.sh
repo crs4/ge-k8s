@@ -83,6 +83,8 @@ set -o allexport
 source "$(script_dir)/gek8s-settings.sh"
 set +o allexport
 
+# 
+host_list=""
 
 # Collect arguments to be passed on to the next program in an array, rather than
 # a simple string. This choice lets us deal with arguments that contain spaces.
@@ -115,6 +117,14 @@ while [ -n "${1-}" ]; do
                 gek8s_config_file="${OPT#*=}"
                 shift
                 ;;
+            --hosts )
+                hosts_list="${OPT#*=}"
+                shift
+                ;;
+            --hosts-file )
+                hosts_file="${OPT#*=}"
+                shift
+                ;;    
             -v )
                 config_properties+=("${2}")
                 shift
@@ -192,6 +202,14 @@ for param in ${gek8s_allowed_config_properties}; do
 done
 debug_log "DONE"
 
+# set hosts list
+if [[ -f ${hosts_file} ]]; then
+    for h in $(cat ${hosts_file}); do
+        hosts_list="${hosts_file}${h},"
+    done
+fi
+
+export hosts_list
 export config_properties
 export positional_parameters
 export environment_config_properties
