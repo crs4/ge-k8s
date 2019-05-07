@@ -47,4 +47,5 @@ if ! type pdsh >/dev/null 2>&1 ; then
 fi
 
 # launch the k8s join on each SGE allocated node
+debug_log "Boostrapping nodes: '${host_list}'"
 pdsh -w ${host_list} ${cmd}
