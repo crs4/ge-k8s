@@ -118,7 +118,7 @@ while [ -n "${1-}" ]; do
                 shift
                 ;;
             --hosts )
-                host_list="${OPT#*=}"
+                host_list="${2}"
                 shift
                 ;;
             --hosts-file )
