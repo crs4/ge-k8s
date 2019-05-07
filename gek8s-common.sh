@@ -118,7 +118,7 @@ while [ -n "${1-}" ]; do
                 shift
                 ;;
             --hosts )
-                hosts_list="${OPT#*=}"
+                host_list="${OPT#*=}"
                 shift
                 ;;
             --hosts-file )
@@ -202,14 +202,14 @@ for param in ${gek8s_allowed_config_properties}; do
 done
 debug_log "DONE"
 
-# set hosts list
+# set host list
 if [[ -f ${hosts_file} ]]; then
     for h in $(cat ${hosts_file}); do
-        hosts_list="${hosts_file}${h},"
+        host_list="${hosts_file}${h},"
     done
 fi
 
-export hosts_list
+export host_list
 export config_properties
 export positional_parameters
 export environment_config_properties
