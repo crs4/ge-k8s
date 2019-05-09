@@ -61,7 +61,7 @@ kubeadm reset -f
 systemctl restart docker
 
 # generate 
-kubeadm_config_file="$(mktemp)"
+kubeadm_config_file="$(mktemp --tmpdir=${TMPDIR} kubeadm_config.XXXXXX)"
 envsubst < ${kubeadm_config_template} > "${kubeadm_config_file}"
 
 # config and launch kubelet via kubeadm
