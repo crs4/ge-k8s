@@ -14,19 +14,25 @@
 # License for the specific language governing permissions and limitations
 # under the License.
 
+set -o nounset
+set -o errexit
+set -o pipefail
+
 # time before Kubelet restart
 sleep_time=20
 
 # help function to check whether the flannel interface
 # appears among the active interfaces
 flannel_is_up() {
-    /usr/sbin/ifconfig | grep flannel
+    /usr/sbin/ifconfig | grep flannel >/dev/null
 }
 
 # restart kubelet until the flannel interface is up
 sleep ${sleep_time}
 while : ; do
-    [[ -z $(flannel_is_up) ]] || break
+    if flannel_is_up ; then
+        break
+    fi
     sleep ${sleep_time}
     systemctl restart kubelet
 done

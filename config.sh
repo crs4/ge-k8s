@@ -33,3 +33,5 @@ k8s_kubeadm_token="zv18vk.q30uidedqilsdklj"
 
 # set labels of joining nodes (e.g., l1,l2,l3, etc.)
 k8s_node_labels="transient-node"
+
+TMPDIR="/tmp"

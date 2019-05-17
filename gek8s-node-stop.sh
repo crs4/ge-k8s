@@ -56,3 +56,6 @@ ifconfig docker0 down
 
 # clean registered iptables rules
 iptables -F && iptables -t nat -F && iptables -t mangle -F && iptables -X
+
+# remove tmp configuration file
+rm -f "${TMPDIR}/kubeadm_config.*"
